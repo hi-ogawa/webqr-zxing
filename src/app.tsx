@@ -24,15 +24,18 @@ export function App() {
 			const track = stream.getVideoTracks()[0];
 			const settings = track.getSettings();
 			const canvas = new OffscreenCanvas(settings.width!, settings.height!);
-			const imageData = canvas
-				.getContext("2d")
-				?.getImageData(0, 0, settings.width!, settings.height!);
-			if (imageData) {
-				const results = await zxing.readBarcodes(imageData, {
-					formats: ["QRCode"],
-				});
-				setResults(results);
-			}
+			const canvasCtx = canvas.getContext("2d")!;
+			canvasCtx.drawImage(videoRef.current!, 0, 0, canvas.width, canvas.height);
+			const imageData = canvasCtx.getImageData(
+				0,
+				0,
+				canvas.width,
+				canvas.height,
+			);
+			const results = await zxing.readBarcodes(imageData, {
+				formats: ["QRCode"],
+			});
+			setResults(results);
 			return null;
 		},
 		gcTime: Infinity,
@@ -52,7 +55,7 @@ export function App() {
 					autoPlay
 				></video>
 			</div>
-			<button hidden>Retry</button>
+			<button onClick={() => {}}>Detect</button>
 			<pre>Results: {JSON.stringify(results, null, 2)}</pre>
 		</div>
 	);
