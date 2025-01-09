@@ -10,7 +10,6 @@ export function App() {
 	const [results, setResults] = React.useState<ReadResult[]>([]);
 
 	const videoRef = React.useRef<HTMLVideoElement>(null);
-	const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
 	const videoQuery = useQuery({
 		queryKey: ["video"],
@@ -32,7 +31,7 @@ export function App() {
 				const results = await zxing.readBarcodes(imageData, {
 					formats: ["QRCode"],
 				});
-				console.log(results);
+				setResults(results);
 			}
 			return null;
 		},
@@ -41,23 +40,20 @@ export function App() {
 	});
 
 	return (
-		<div className="flex flex-col w-full max-w-lg p-2 mx-auto">
+		<div className="flex flex-col gap-2 w-full max-w-lg p-2 mx-auto">
 			<h4>Web QR ZXing</h4>
 			<div>
-				{videoQuery.isError && <div>Failed to access camera</div>}
-				<video ref={videoRef} autoPlay hidden></video>
-				<canvas ref={canvasRef} hidden></canvas>
+				{videoQuery.isError && <div>Error: Failed to access camera</div>}
 			</div>
-			<form
-				action={async () => {
-					const results = await zxing.test();
-					setResults(results);
-				}}
-			>
-				<button>Test</button>
-			</form>
-			<button>Retry</button>
-			<pre>{JSON.stringify(results, null, 2)}</pre>
+			<div className="relative w-full aspect-video overflow-hidden">
+				<video
+					className="absolute w-full h-full"
+					ref={videoRef}
+					autoPlay
+				></video>
+			</div>
+			<button hidden>Retry</button>
+			<pre>Results: {JSON.stringify(results, null, 2)}</pre>
 		</div>
 	);
 }
