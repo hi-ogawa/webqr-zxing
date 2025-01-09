@@ -1,11 +1,26 @@
 {
-  "name": "@hiogawa/zxing-cpp-app",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build-local": "meson setup dist/local/release --buildtype release && meson compile -C dist/local/release",
-    "build-emscripten": "pnpm docker meson setup dist/emscripten/release --cross-file meson-cross-file-emscripten.ini --buildtype release && pnpm docker meson compile -C dist/emscripten/release",
-    "docker": "DOCKER_USER=$(id -u):$(id -g) docker compose run --rm emscripten"
-  },
-  "packageManager": "pnpm@10.0.0+sha512.b8fef5494bd3fe4cbd4edabd0745df2ee5be3e4b0b8b08fa643aa3e4c6702ccc0f00d68fa8a8c9858a735a0032485a44990ed2810526c875e416f001b17df12b"
+	"name": "@hiogawa/zxing-cpp-app",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"lint": "biome check --write .",
+		"lint-check": "biome check ."
+	},
+	"dependencies": {
+		"@hiogawa/tiny-rpc": "0.2.3-pre.18",
+		"zxing-wasm": "^2.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@tsconfig/strictest": "^2.0.5",
+		"@types/node": "^22.10.5",
+		"vite": "^6.0.7"
+	},
+	"packageManager": "pnpm@10.0.0+sha512.b8fef5494bd3fe4cbd4edabd0745df2ee5be3e4b0b8b08fa643aa3e4c6702ccc0f00d68fa8a8c9858a735a0032485a44990ed2810526c875e416f001b17df12b",
+	"volta": {
+		"node": "22.13.0"
+	}
 }
