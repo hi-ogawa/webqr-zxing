@@ -1,6 +1,7 @@
 {
 	"extends": "@tsconfig/strictest/tsconfig.json",
 	"compilerOptions": {
+		"jsx": "react-jsx",
 		"resolveJsonModule": true,
 		"noUncheckedIndexedAccess": false,
 		"exactOptionalPropertyTypes": false,

@@ -1,3 +1,4 @@
+import unocss from "unocss/vite";
 import { type Plugin, defineConfig } from "vite";
 
 export default defineConfig({
@@ -5,7 +6,7 @@ export default defineConfig({
 	optimizeDeps: {
 		entries: ["./src/index.ts", "./src/zxing-worker.ts"],
 	},
-	plugins: [assetPrefetchPlugin()],
+	plugins: [unocss(), assetPrefetchPlugin()],
 });
 
 function assetPrefetchPlugin(): Plugin {
