@@ -119,13 +119,14 @@ export function App() {
 				}}
 				disabled={!videoQuery.isSuccess}
 			>
-				{scanState === "scanning" ? "Pause scan" : "Start scan"}
+				{scanState === "scanning" ? "Pause" : "Rescan"}
 			</button>
 			{scanMutation.isError && (
 				<pre>
 					{scanMutation.error.name}: {scanMutation.error.message}
 				</pre>
 			)}
+			{scanState === "scanning" && "Scanning..."}
 			{scanState === "found" && results.length > 0 && (
 				<ReadResultView results={results} />
 			)}
