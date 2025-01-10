@@ -87,7 +87,7 @@ export function App() {
 			</div>
 			{/* TODO: repeat auto scan until found? */}
 			<button
-				className="p-2"
+				className="p-2 bg-slate-200 cursor-pointer transition-300"
 				onClick={() => scanMutation.mutate()}
 				disabled={!videoQuery.isSuccess || scanMutation.isPending}
 			>
