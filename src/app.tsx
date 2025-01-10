@@ -65,7 +65,7 @@ export function App() {
 		<div className="flex flex-col gap-2 w-full max-w-md p-2 mx-auto">
 			<div className="flex items-center">
 				<h1 className="text-lg flex-1 m-0">Web QR ZXing</h1>
-				<a href="https://github.com/hi-ogawa/web-qr-zxing" target="_blank">
+				<a href="https://github.com/hi-ogawa/webqr-zxing" target="_blank">
 					GitHub
 				</a>
 			</div>
