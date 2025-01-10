@@ -69,7 +69,7 @@ export function App() {
 		onSuccess(data) {
 			if (scanState === "scanning") {
 				if (data.length === 0) {
-					setTimeout(() => scanMutation.mutate());
+					setTimeout(() => scanMutation.mutate(), 200);
 				} else {
 					setResults(data);
 					setScanState("found");
