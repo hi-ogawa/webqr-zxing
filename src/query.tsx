@@ -17,16 +17,14 @@ export function QueryClientWrapper(props: React.PropsWithChildren) {
 					},
 					mutations: {
 						onError: (error) => {
-							console.error("mutation error", error);
-							window.alert(error.name + ": " + error.message);
+							console.error("[mutation error]", error);
 							// window.alert("Something went wrong...");
 						},
 					},
 				},
 				queryCache: new QueryCache({
 					onError(error, _query) {
-						console.error("query error", error);
-						window.alert(error.name + ": " + error.message);
+						console.error("[query error]", error);
 						// window.alert("Something went wrong...");
 					},
 				}),

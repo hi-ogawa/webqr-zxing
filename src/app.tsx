@@ -7,18 +7,18 @@ import { zxing } from "./zxing-worker-proxy";
 // https://github.com/zxing-cpp/zxing-cpp/blob/master/wrappers/wasm/demo_cam_reader.html
 
 export function App() {
-	const [results, setResults] = React.useState<ReadResult[]>([]);
-
 	const videoRef = React.useRef<HTMLVideoElement>(null);
 	const mediaRef = React.useRef<MediaStream>(undefined);
 
 	const videoQuery = useQuery({
 		queryKey: ["video"],
 		async queryFn() {
-			// TODO: check camera permissions
+			// TODO: check camera permissions?
 			// const status = await navigator.permissions.query({ name: 'camera' as any });
+			// TODO: enumerate devices?
+			// navigator.mediaDevices.enumerateDevices;
 			const media = await navigator.mediaDevices.getUserMedia({
-				// video: true,
+				// `video: true` seems to fail on my mobile phone
 				video: {
 					facingMode: "environment",
 				},
@@ -49,34 +49,46 @@ export function App() {
 			const results = await zxing.readBarcodes(imageData, {
 				formats: ["QRCode"],
 			});
-			setResults(results);
+			return results;
 		},
 	});
-	videoQuery.isSuccess;
 
 	return (
-		<div className="flex flex-col gap-2 w-full max-w-lg p-2 mx-auto">
-			<h4>Web QR ZXing</h4>
-			<div>
-				{videoQuery.isError && <div>Error: Failed to access camera</div>}
+		<div className="flex flex-col gap-2 w-full max-w-md p-2 mx-auto">
+			<div className="flex items-center">
+				<h1 className="text-lg flex-1 m-0">Web QR ZXing</h1>
+				<a href="https://github.com/hi-ogawa/web-qr-zxing" target="_blank">
+					GitHub
+				</a>
 			</div>
-			<div className="relative w-full aspect-video overflow-hidden">
+			<div className="relative w-full aspect-square overflow-hidden bg-black">
 				<video
 					className="absolute w-full h-full"
 					ref={videoRef}
 					autoPlay
 					playsInline
 				></video>
+				{videoQuery.isError && (
+					<div className="absolute w-full h-full text-white flex justify-center items-center flex flex-col">
+						<div>Failed to access a camera</div>
+						<pre>
+							{videoQuery.error.name}: {videoQuery.error.message}
+						</pre>
+					</div>
+				)}
 			</div>
 			<button
-				onClick={() => {
-					scanMutation.mutate();
-				}}
+				className="p-1"
+				onClick={() => scanMutation.mutate()}
 				disabled={!videoQuery.isSuccess || scanMutation.isPending}
 			>
 				Scan
 			</button>
-			<pre>Results: {JSON.stringify(results, null, 2)}</pre>
+			{scanMutation.isSuccess && <ReadResultView results={scanMutation.data} />}
 		</div>
 	);
+}
+
+function ReadResultView({ results }: { results: ReadResult[] }) {
+	return <pre>Results: {JSON.stringify(results, null, 2)}</pre>;
 }

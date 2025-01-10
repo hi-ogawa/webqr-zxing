@@ -1,3 +1,4 @@
+import react from "@vitejs/plugin-react";
 import unocss from "unocss/vite";
 import { type Plugin, defineConfig } from "vite";
 
@@ -6,7 +7,7 @@ export default defineConfig({
 	optimizeDeps: {
 		entries: ["./src/index.ts", "./src/zxing-worker.ts"],
 	},
-	plugins: [unocss({ inspector: false }), assetPrefetchPlugin()],
+	plugins: [react(), unocss({ inspector: false }), assetPrefetchPlugin()],
 });
 
 function assetPrefetchPlugin(): Plugin {
