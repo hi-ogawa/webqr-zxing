@@ -18,6 +18,7 @@ export function QueryClientWrapper(props: React.PropsWithChildren) {
 					mutations: {
 						onError: (error) => {
 							console.error("mutation error", error);
+							window.alert(error.name + ": " + error.message);
 							// window.alert("Something went wrong...");
 						},
 					},
@@ -25,6 +26,7 @@ export function QueryClientWrapper(props: React.PropsWithChildren) {
 				queryCache: new QueryCache({
 					onError(error, _query) {
 						console.error("query error", error);
+						window.alert(error.name + ": " + error.message);
 						// window.alert("Something went wrong...");
 					},
 				}),

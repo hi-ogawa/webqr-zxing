@@ -6,7 +6,7 @@ export default defineConfig({
 	optimizeDeps: {
 		entries: ["./src/index.ts", "./src/zxing-worker.ts"],
 	},
-	plugins: [unocss(), assetPrefetchPlugin()],
+	plugins: [unocss({ inspector: false }), assetPrefetchPlugin()],
 });
 
 function assetPrefetchPlugin(): Plugin {

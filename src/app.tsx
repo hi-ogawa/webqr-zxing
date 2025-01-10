@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React from "react";
 import type { ReadResult } from "zxing-wasm/reader";
 import { zxing } from "./zxing-worker-proxy";
@@ -10,18 +10,32 @@ export function App() {
 	const [results, setResults] = React.useState<ReadResult[]>([]);
 
 	const videoRef = React.useRef<HTMLVideoElement>(null);
+	const mediaRef = React.useRef<MediaStream>(undefined);
 
 	const videoQuery = useQuery({
 		queryKey: ["video"],
 		async queryFn() {
 			// TODO: check camera permissions
 			// const status = await navigator.permissions.query({ name: 'camera' as any });
-			const stream = await navigator.mediaDevices.getUserMedia({
-				video: true,
+			const media = await navigator.mediaDevices.getUserMedia({
+				// video: true,
+				video: {
+					facingMode: "environment",
+				},
 				audio: false,
 			});
-			videoRef.current!.srcObject = stream;
-			const track = stream.getVideoTracks()[0];
+			videoRef.current!.srcObject = media;
+			mediaRef.current = media;
+			return null;
+		},
+		gcTime: Infinity,
+		staleTime: Infinity,
+	});
+
+	const scanMutation = useMutation({
+		mutationFn: async () => {
+			const media = mediaRef.current!;
+			const track = media.getVideoTracks()[0];
 			const settings = track.getSettings();
 			const canvas = new OffscreenCanvas(settings.width!, settings.height!);
 			const canvasCtx = canvas.getContext("2d")!;
@@ -36,11 +50,9 @@ export function App() {
 				formats: ["QRCode"],
 			});
 			setResults(results);
-			return null;
 		},
-		gcTime: Infinity,
-		staleTime: Infinity,
 	});
+	videoQuery.isSuccess;
 
 	return (
 		<div className="flex flex-col gap-2 w-full max-w-lg p-2 mx-auto">
@@ -53,9 +65,17 @@ export function App() {
 					className="absolute w-full h-full"
 					ref={videoRef}
 					autoPlay
+					playsInline
 				></video>
 			</div>
-			<button onClick={() => {}}>Detect</button>
+			<button
+				onClick={() => {
+					scanMutation.mutate();
+				}}
+				disabled={!videoQuery.isSuccess || scanMutation.isPending}
+			>
+				Scan
+			</button>
 			<pre>Results: {JSON.stringify(results, null, 2)}</pre>
 		</div>
 	);
