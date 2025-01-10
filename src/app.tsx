@@ -85,8 +85,9 @@ export function App() {
 					</div>
 				)}
 			</div>
+			{/* TODO: repeat auto scan until found? */}
 			<button
-				className="p-1"
+				className="p-2"
 				onClick={() => scanMutation.mutate()}
 				disabled={!videoQuery.isSuccess || scanMutation.isPending}
 			>
@@ -103,6 +104,26 @@ export function App() {
 }
 
 function ReadResultView({ results }: { results: ReadResult[] }) {
-	// TODO
-	return <pre>Results: {JSON.stringify(results, null, 2)}</pre>;
+	if (results.length === 0) {
+		return <div>No result</div>;
+	}
+	const result = results[0];
+	return (
+		<div className="flex flex-col gap-2">
+			<div className="break-all">
+				Result:{" "}
+				{result.text.match(/^https?:\/\//) ? (
+					<a href={result.text} target="_blank">
+						{result.text}
+					</a>
+				) : (
+					result.text
+				)}
+			</div>
+			<details>
+				<summary>Show full results</summary>
+				<pre>{JSON.stringify(results, null, 2)}</pre>
+			</details>
+		</div>
+	);
 }
