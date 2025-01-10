@@ -9,7 +9,7 @@ import ZXING_WORKER_URL from "./zxing-worker?worker&url";
 
 export let zxing: TinyRpcProxy<ZxingService>;
 
-export async function initZxing() {
+export async function createZxingWorker() {
 	const worker = new Worker(ZXING_WORKER_URL, { type: "module" });
 	zxing = proxyTinyRpc<ZxingService>({
 		adapter: messagePortClientAdapter({
