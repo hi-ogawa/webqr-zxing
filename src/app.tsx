@@ -14,9 +14,9 @@ export function App() {
 		queryKey: ["video"],
 		async queryFn() {
 			// TODO: check camera permissions?
-			// const status = await navigator.permissions.query({ name: 'camera' as any });
+			// navigator.permissions.query({ name: 'camera' as any });
 			// TODO: enumerate devices?
-			// navigator.mediaDevices.enumerateDevices;
+			// navigator.mediaDevices.enumerateDevices();
 			const media = await navigator.mediaDevices.getUserMedia({
 				// `video: true` seems to fail on my mobile phone
 				video: {
@@ -24,6 +24,7 @@ export function App() {
 				},
 				audio: false,
 			});
+			// TODO: doesn't autoplay on mobile chrome?
 			videoRef.current!.srcObject = media;
 			mediaRef.current = media;
 			return null;
@@ -90,5 +91,6 @@ export function App() {
 }
 
 function ReadResultView({ results }: { results: ReadResult[] }) {
+	// TODO
 	return <pre>Results: {JSON.stringify(results, null, 2)}</pre>;
 }
