@@ -8,7 +8,10 @@
 		"preview": "vite preview",
 		"tunnel": "cloudflared tunnel --url http://localhost:5173",
 		"lint": "biome check --write .",
-		"lint-check": "biome check ."
+		"lint-check": "biome check .",
+		"vc-build": "pnpm build && bash misc/vercel/build.sh",
+		"vc-release": "vercel deploy --prebuilt .",
+		"vc-release-production": "vercel deploy --prebuilt . --prod"
 	},
 	"dependencies": {
 		"@hiogawa/tiny-rpc": "0.2.3-pre.18",
