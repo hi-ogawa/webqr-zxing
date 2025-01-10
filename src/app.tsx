@@ -69,7 +69,7 @@ export function App() {
 					playsInline
 				></video>
 				{videoQuery.isError && (
-					<div className="absolute w-full h-full text-white flex justify-center items-center flex flex-col">
+					<div className="absolute w-full h-full text-white flex justify-center items-center flex flex-col gap-2">
 						<div>Failed to access a camera</div>
 						<pre>
 							{videoQuery.error.name}: {videoQuery.error.message}
