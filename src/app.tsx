@@ -1,7 +1,8 @@
+import { tinyassert } from "@hiogawa/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React from "react";
 import type { ReadResult } from "zxing-wasm/reader";
-import { zxing } from "./zxing-worker-proxy";
+import { initZxing, zxing } from "./zxing-worker-proxy";
 
 // reference
 // https://github.com/zxing-cpp/zxing-cpp/blob/master/wrappers/wasm/demo_cam_reader.html
@@ -25,7 +26,8 @@ export function App() {
 				audio: false,
 			});
 			// TODO: doesn't autoplay on mobile chrome?
-			videoRef.current!.srcObject = media;
+			tinyassert(videoRef.current);
+			videoRef.current.srcObject = media;
 			mediaRef.current = media;
 			return null;
 		},
@@ -35,12 +37,17 @@ export function App() {
 
 	const scanMutation = useMutation({
 		mutationFn: async () => {
+			await initZxing();
 			const media = mediaRef.current!;
 			const track = media.getVideoTracks()[0];
 			const settings = track.getSettings();
-			const canvas = new OffscreenCanvas(settings.width!, settings.height!);
-			const canvasCtx = canvas.getContext("2d")!;
-			canvasCtx.drawImage(videoRef.current!, 0, 0, canvas.width, canvas.height);
+			tinyassert(settings.width);
+			tinyassert(settings.height);
+			const canvas = new OffscreenCanvas(settings.width, settings.height);
+			const canvasCtx = canvas.getContext("2d");
+			tinyassert(canvasCtx);
+			tinyassert(videoRef.current);
+			canvasCtx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 			const imageData = canvasCtx.getImageData(
 				0,
 				0,
@@ -86,6 +93,11 @@ export function App() {
 				Scan
 			</button>
 			{scanMutation.isSuccess && <ReadResultView results={scanMutation.data} />}
+			{scanMutation.isError && (
+				<pre>
+					{scanMutation.error.name}: {scanMutation.error.message}
+				</pre>
+			)}
 		</div>
 	);
 }

@@ -3,10 +3,10 @@ import React from "react";
 import ReactDOMClient from "react-dom/client";
 import { App } from "./app";
 import { QueryClientWrapper } from "./query";
-import { createZxingWorker } from "./zxing-worker-proxy";
+import { initZxing } from "./zxing-worker-proxy";
 
 async function main() {
-	await createZxingWorker();
+	initZxing();
 	ReactDOMClient.createRoot(document.getElementById("root")!).render(
 		<React.StrictMode>
 			<QueryClientWrapper>
