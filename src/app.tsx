@@ -11,6 +11,11 @@ export function App() {
 	const videoRef = React.useRef<HTMLVideoElement>(null);
 	const mediaRef = React.useRef<MediaStream>(undefined);
 
+	const [scanState, setScanState] = React.useState<
+		"paused" | "scanning" | "found"
+	>("paused");
+	const [results, setResults] = React.useState<ReadResult[]>([]);
+
 	const videoQuery = useQuery({
 		queryKey: ["video"],
 		async queryFn() {
@@ -29,6 +34,8 @@ export function App() {
 			tinyassert(videoRef.current);
 			videoRef.current.srcObject = media;
 			mediaRef.current = media;
+			setScanState("scanning");
+			scanMutation.mutate();
 			return null;
 		},
 		gcTime: Infinity,
@@ -59,6 +66,21 @@ export function App() {
 			});
 			return results;
 		},
+		onSuccess(data) {
+			if (scanState === "scanning") {
+				if (data.length === 0) {
+					setTimeout(() => scanMutation.mutate());
+				} else {
+					setResults(data);
+					setScanState("found");
+				}
+			}
+		},
+		onError() {
+			if (scanState === "scanning") {
+				setScanState("paused");
+			}
+		},
 	});
 
 	return (
@@ -85,28 +107,33 @@ export function App() {
 					</div>
 				)}
 			</div>
-			{/* TODO: repeat auto scan until found? */}
 			<button
 				className="p-2 bg-slate-200 cursor-pointer transition-300"
-				onClick={() => scanMutation.mutate()}
-				disabled={!videoQuery.isSuccess || scanMutation.isPending}
+				onClick={() => {
+					if (scanState === "scanning") {
+						setScanState("paused");
+					} else {
+						setScanState("scanning");
+						scanMutation.mutate();
+					}
+				}}
+				disabled={!videoQuery.isSuccess}
 			>
-				Scan
+				{scanState === "scanning" ? "Pause scan" : "Start scan"}
 			</button>
-			{scanMutation.isSuccess && <ReadResultView results={scanMutation.data} />}
 			{scanMutation.isError && (
 				<pre>
 					{scanMutation.error.name}: {scanMutation.error.message}
 				</pre>
+			)}
+			{scanState === "found" && results.length > 0 && (
+				<ReadResultView results={results} />
 			)}
 		</div>
 	);
 }
 
 function ReadResultView({ results }: { results: ReadResult[] }) {
-	if (results.length === 0) {
-		return <div>No result</div>;
-	}
 	const result = results[0];
 	return (
 		<div className="flex flex-col gap-2">
