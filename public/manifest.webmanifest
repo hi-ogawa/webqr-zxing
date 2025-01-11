@@ -1,4 +1,5 @@
 {
+	"$schema": "https://json.schemastore.org/web-manifest",
 	"name": "WebQR ZXing",
 	"short_name": "WebQR",
 	"description": "A web application for scanning QR codes using ZXing library.",
