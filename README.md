@@ -1,4 +1,4 @@
-# web-qr-zxing
+# webqr-zxing
 
 ```sh
 # local
