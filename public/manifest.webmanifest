@@ -4,7 +4,7 @@
 	"short_name": "WebQR",
 	"description": "A web application for scanning QR codes using ZXing library.",
 	"start_url": "/",
-	"display": "standalone",
+	"display": "minimal-ui",
 	"background_color": "#ffffff",
 	"theme_color": "#000000",
 	"icons": [
