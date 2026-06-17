@@ -7,6 +7,12 @@ pnpm build
 pnpm preview
 
 # deploy
-pnpm vc-build
-pnpm vc-release-production
+pnpm build
+```
+
+Cloudflare Pages:
+
+```txt
+Build command: pnpm build
+Output directory: dist
 ```
